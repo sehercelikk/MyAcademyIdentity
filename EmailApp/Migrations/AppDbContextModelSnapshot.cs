@@ -162,7 +162,7 @@ namespace EmailApp.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Messages");
+                    b.ToTable("Messages", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

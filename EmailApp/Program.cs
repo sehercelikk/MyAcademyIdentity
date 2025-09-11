@@ -1,5 +1,6 @@
 using EmailApp.Context;
 using EmailApp.Entities;
+using EmailApp.Validations;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,10 +13,17 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddIdentity<AppUser, AppRole>(opt =>
 {
     opt.User.RequireUniqueEmail = true;
-}).AddEntityFrameworkStores<AppDbContext>();
+}).AddEntityFrameworkStores<AppDbContext>()
+.AddErrorDescriber<CustomErrorDescriber>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.ConfigureApplicationCookie(opt =>
+{
+    opt.LoginPath = "/Login/Login";
+});  //Yetki sayfasýný giriþ yapmayan kullanýcý için login e atma
+
 
 var app = builder.Build();
 
@@ -29,7 +37,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
