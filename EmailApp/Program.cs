@@ -21,6 +21,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.ConfigureApplicationCookie(opt =>
 {
+    opt.Cookie.Name = "IdentityCookie";
     opt.LoginPath = "/Login/Login";
 });  //Yetki sayfasýný giriþ yapmayan kullanýcý için login e atma
 

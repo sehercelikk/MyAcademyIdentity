@@ -1,0 +1,22 @@
+﻿@model SendMessageViewModel
+@{
+    ViewData["Title"] = "SendMessage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>Mesaj Oluştur</h3>
+<form method="post">
+    <div class="form-group">
+        <label>Alıcı Mail</label>
+        <input type="text" class="form-control" asp-for="RecieverEmail" required/>
+    </div>
+    <div class="form-group">
+        <label>Konu</label>
+        <input type="text" class="form-control" asp-for="Subject" required />
+    </div>
+    <div class="form-group">
+        <label>Mesajınız</label>
+        <textarea type="text" asp-for="Body" class="form-control" rows="10" required></textarea>
+    </div>
+    <button class="btn btn-outline-success" type="submit">Gönder</button>
+</form>

@@ -37,6 +37,6 @@ public class LoginController : Controller
             ModelState.AddModelError("", "Email veya şifre hatalı");
             return View(model);
         }
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Index", "Message");
     }
 }

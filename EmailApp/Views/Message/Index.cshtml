@@ -1,0 +1,33 @@
+﻿@model List<Message>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int count = 0;
+}
+
+<h3>Gelen Mesajlar</h3>
+<table class="table table-bordered table-striped">
+    <a href="/Message/SendMessage" class="btn btn-outline-primary">Mesaj Oluştur</a>
+    <tr>
+        <th>#</th>
+        <th>Ad Soyad</th>
+        <th>Email</th>
+        <th>Konu</th>
+        <th>Tarih</th>
+        <th></th>
+    </tr>
+    @foreach(var item in Model)
+    {
+        count++;
+        <tr>
+            <th>@count</th>
+            <td>@item.Sender.FristName @item.Sender.LastName</td>
+            <td>@item.Sender.Email</td>
+            <td>@item.Subject</td>
+            <td>@item.SendDate</td>
+            <td><a href="/Message/MessageDetail/@item.MessageId" class="btn btn-outline-warning text-dark">Aç</a></td>
+        </tr>
+    }
+
+</table>
+
