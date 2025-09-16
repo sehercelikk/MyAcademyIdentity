@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace EmailApp.Controllers
+namespace EmailApp.Controllers;
+
+public class MainLayoutController : Controller
 {
-    public class MainLayoutController : Controller
+    public IActionResult Index()
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        return View();
     }
 }
