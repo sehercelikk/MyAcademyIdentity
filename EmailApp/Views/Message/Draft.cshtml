@@ -1,14 +1,13 @@
 ﻿@model List<Message>
 @{
-    ViewData["Title"] = "MessageTrash";
+    ViewData["Title"] = "Draft";
     Layout = "~/Views/MainLayout/Index.cshtml";
 }
-
 
 <div class="col-md-9">
     <div class="card card-primary card-outline">
         <div class="card-header">
-            <h3 class="card-title text-center">Çöp Kutusu</h3>
+            <h3 class="card-title text-center">Taslaklar</h3>
 
             <div class="card-tools">
                 <div class="input-group input-group-sm">
@@ -24,7 +23,7 @@
         </div>
         <!-- /.card-header -->
         <div class="card-body p-0">
-            
+
             <div class="table-responsive mailbox-messages">
                 <table class="table table-hover table-striped">
                     <tbody>
@@ -43,7 +42,7 @@
                                 </td>
                                 <td class="mailbox-attachment"></td>
                                 <td class="mailbox-date">@item.SendDate.ToShortDateString()</td>
-                                <td class="mailbox-date"> <a href="/Message/MesajıKaliciSil/@item.MessageId" class="btn btn-default"><i class="far fa-trash-alt"></i></a></td>
+
                             </tr>
 
                         }
@@ -54,9 +53,11 @@
             <!-- /.mail-box-messages -->
         </div>
         <!-- /.card-body -->
-       
+
     </div>
     <!-- /.card -->
 </div>
+
+
 
 

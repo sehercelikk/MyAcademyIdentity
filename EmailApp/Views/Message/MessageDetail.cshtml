@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "MessageDetail";
     Layout = "~/Views/MainLayout/Index.cshtml";
+    var isDraft = ViewBag.Draft;
 }
 <div class="col-md-9">
     <div class="card card-primary card-outline">
@@ -18,7 +19,7 @@
             <div class="mailbox-read-info">
                 <h5>@Model.Subject</h5>
                 <h6>
-                   Kimden:  @Model.Sender.Email
+                    Kimden:  @Model.Sender.Email
                     <span class="mailbox-read-time float-right">@Model.SendDate</span>
                 </h6>
             </div>
@@ -49,7 +50,6 @@
         <!-- /.card-body -->
         <div class="card-footer bg-white">
             <ul class="mailbox-attachments d-flex align-items-stretch clearfix">
-               
             </ul>
         </div>
         <!-- /.card-footer -->
@@ -58,8 +58,12 @@
                 <button type="button" class="btn btn-default"><i class="fas fa-reply"></i> Reply</button>
                 <button type="button" class="btn btn-default"><i class="fas fa-share"></i> Forward</button>
             </div>
-            <button type="button" class="btn btn-default"><i class="far fa-trash-alt"></i> Delete</button>
-            <button type="button" class="btn btn-default"><i class="fas fa-print"></i> Print</button>
+            <a href="Message/MessageDelete/@Model.MessageId" class="btn btn-default"><i class="far fa-trash-alt"></i></a>
+            @if (isDraft == true)
+            {
+                <a asp-action="SendMessage" asp-route-id="@Model.MessageId" class="btn btn-default"><i class="fas fa-pencil-alt"></i> Gönder </a>
+            }
+
         </div>
         <!-- /.card-footer -->
     </div>

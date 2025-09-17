@@ -1,10 +1,9 @@
-﻿
+﻿@model List<Message>
 @*
     Navbar component partial view for the main navigation bar.
 *@
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
-
     <!-- SEARCH FORM -->
     <form class="form-inline ml-3">
         <div class="input-group input-group-sm">
@@ -23,27 +22,40 @@
         <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
                 <i class="far fa-comments"></i>
-                <span class="badge badge-danger navbar-badge">Son gelen 3 Mesaj</span>
+                <span class="badge badge-danger navbar-badge">@ViewBag.IsRead</span>
             </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                    <!-- Message Start -->
-                    <div class="media">
-                        <img src="~/AdminLTE-3.0.4/dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
-                        <div class="media-body">
-                            <h3 class="dropdown-item-title">
-                                John Pierce
-                                <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
-                            </h3>
-                            <p class="text-sm">I got your message bro</p>
-                            <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
+                @foreach (var item in Model)
+                {
+                    <a href="#" class="dropdown-item">
+                        <!-- Message Start -->
+                        <div class="media">
+                            <div class="media-body">
+                                <h3 class="dropdown-item-title">
+                                    @item.Sender.FristName @item.Sender.LastName
+                                </h3>
+                                <p class="text-sm">@item.Subject</p>
+                                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> @item.SendDate.ToShortDateString()</p>
+                            </div>
                         </div>
-                    </div>
-                    <!-- Message End -->
-                </a>
+                        <!-- Message End -->
+                    </a>
+                }
 
-                <a href="#" class="dropdown-item dropdown-footer">Tümünü Gör</a>
+                <a href="/Message/Index" class="dropdown-item dropdown-footer">Tümünü Gör</a>
+            </div>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#">
+                <i class="far fa-comments"></i>
+                <span class="badge badge-danger navbar-badge">Profil</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                <div class="dropdown-divider"></div>
+                
+
+                <a href="/Message/Index" class="dropdown-item dropdown-footer">Tümünü Gör</a>
             </div>
         </li>
     </ul>

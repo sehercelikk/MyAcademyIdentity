@@ -10,26 +10,33 @@ using System.Threading.Tasks;
 namespace EmailApp.Controllers;
 
 [Authorize]
-public class MessageController(AppDbContext _context,UserManager<AppUser> _userManager) : Controller
+public class MessageController(AppDbContext _context, UserManager<AppUser> _userManager) : Controller
 {
     public async Task<IActionResult> Index()
     {
         var user = await _userManager.FindByNameAsync(User.Identity.Name);
-        var messages =await _context.Messages.Include(a=>a.Sender)
-            .Where(a => a.RecieverId == user.Id & a.IsDeleted == false).ToListAsync();
-        ViewBag.NotReadMessageCount=messages.Where(a => a.IsRead == false).Count();
+        var messages = await _context.Messages.Include(a => a.Sender)
+            .Where(a => a.RecieverId == user.Id & a.IsDeleted == false & a.IsDraft == false).ToListAsync();
+        ViewBag.NotReadMessageCount = messages.Where(a => a.IsRead == false).Count();
 
         return View(messages);
     }
-
+    public async Task<IActionResult> SentMessageBox()
+    {
+        var user=await _userManager.FindByNameAsync(User.Identity.Name);
+        var messages =await _context.Messages.Include(a => a.Reciever)
+            .Where(a => a.SenderId == user.Id & a.IsDraft == false).ToListAsync();
+        return View(messages);
+    }
     public async Task<IActionResult> MessageDetail(int id)
     {
         var message = await _context.Messages.Include(a => a.Sender).FirstOrDefaultAsync(a => a.MessageId == id);
         message.IsRead = true;
+        ViewBag.Draft = message.IsDraft;
         await _context.SaveChangesAsync();
         return View(message);
     }
-    public IActionResult SendMsessage() => View();
+    public IActionResult SendMessage() => View();
 
     [HttpPost]
     public async Task<IActionResult> SendMessage(SendMessageViewModel model)
@@ -48,10 +55,10 @@ public class MessageController(AppDbContext _context,UserManager<AppUser> _userM
         await _context.SaveChangesAsync();
         return RedirectToAction("Index");
     }
-
+   
     public async Task<IActionResult> MessageImportant(int id)
     {
-        var message=await _context.Messages.FindAsync(id);
+        var message = await _context.Messages.FindAsync(id);
         message.IsImportent = !message.IsImportent;
         await _context.SaveChangesAsync();
         return RedirectToAction("Index");
@@ -59,17 +66,54 @@ public class MessageController(AppDbContext _context,UserManager<AppUser> _userM
 
     public async Task<IActionResult> MessageDelete(int id)
     {
-        var message= await _context.Messages.FindAsync(id);
+        var message = await _context.Messages.FindAsync(id);
         message.IsDeleted = true;
         await _context.SaveChangesAsync();
         return RedirectToAction("Index");
     }
 
+    public async Task<IActionResult> MesajıKaliciSil(int id)
+    {
+        var message = await _context.Messages.FindAsync(id);
+        _context.Messages.Remove(message);
+        await _context.SaveChangesAsync();
+        return View();
+    }
+
     public async Task<IActionResult> MessageTrash()
     {
-        var user =await _userManager.FindByNameAsync(User.Identity.Name);
+        var user = await _userManager.FindByNameAsync(User.Identity.Name);
         var messages = await _context.Messages.Include(a => a.Sender)
-            .Where(a => a.RecieverId == user.Id & a.IsDeleted == true).ToListAsync();
+            .Where(a => a.RecieverId == user.Id && a.IsDeleted == true).ToListAsync();
         return View(messages);
+    }
+
+    public async Task<IActionResult> Draft()
+    {
+        var user = await _userManager.FindByNameAsync(User.Identity.Name);
+        var draft = await _context.Messages
+            .Where(a => a.RecieverId == user.Id && a.IsDraft == true).ToListAsync();
+        return View(draft);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> MoveToDraft(SendMessageViewModel model)
+    {
+        var sender = await _userManager.FindByNameAsync(User.Identity.Name);
+        var reciever = await _userManager.FindByEmailAsync(model.RecieverEmail);
+        var user = new Message
+        {
+            Body = model.Body,
+            Subject = model.Subject,
+            SenderId = sender.Id,
+            RecieverId=reciever.Id,
+            SendDate = DateTime.Now,
+            IsDraft = true,
+            IsRead = false,
+            IsDeleted = false
+        };
+        await _context.Messages.AddAsync(user);
+        await _context.SaveChangesAsync();
+        return RedirectToAction("Draft", "Message");
     }
 }
